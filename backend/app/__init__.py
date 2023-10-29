@@ -1,0 +1,60 @@
+from flask import Flask
+
+from . import config as Config
+from .extensions import db, migrate, scheduler, api
+from .injector import configure_injector
+
+from .tasks import hotdeal_update_task
+
+NAMESPACES = [
+
+]
+
+def create_app(app_name=None, config=None) -> Flask:
+
+    if app_name is None:
+        app_name = Config.DefaultConfig.PROJECT
+    
+    app = Flask(app_name)
+    configure_app(app, config)
+    configure_extensions(app)
+
+def configure_app(app: Flask, config=None):
+
+    app.config.from_object(Config.DefaultConfig)
+
+    if config:
+        app.config.from_object(config)
+        return
+
+def configure_extensions(app):
+
+    # flask_sqlalchemy
+    db.init_app(app)
+
+    # flask_migrate
+    migrate.init_app(app, db)
+
+    # flask_apshceduler
+    scheduler.init_app(app)
+
+    # flask_restx
+    api.init_app(app)
+
+    for ns in NAMESPACES:
+        api.add_namespace(ns)
+    
+    from . import tasks
+    from . import models
+    scheduler.add_job(
+        func=hotdeal_update_task,
+        id="hotdeal_update",
+        trigger="interval",
+        seconds=10800,
+        max_instance=1,
+        start_date="2000-01-01 12:19:00",
+    )
+    scheduler.start()
+
+    # flask_injector
+    configure_injector(app, db)
