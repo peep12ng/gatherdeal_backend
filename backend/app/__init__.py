@@ -1,8 +1,7 @@
 from flask import Flask
 
 from . import config as Config
-from .extensions import db, migrate, scheduler, api
-from .injector import configure_injector
+from .extensions import db, migrate, scheduler, api, _configure_injector
 
 from .tasks import hotdeal_update_task
 
@@ -18,6 +17,8 @@ def create_app(app_name=None, config=None) -> Flask:
     app = Flask(app_name)
     configure_app(app, config)
     configure_extensions(app)
+
+    return app
 
 def configure_app(app: Flask, config=None):
 
@@ -51,10 +52,10 @@ def configure_extensions(app):
         id="hotdeal_update",
         trigger="interval",
         seconds=10800,
-        max_instance=1,
+        max_instances=1,
         start_date="2000-01-01 12:19:00",
     )
     scheduler.start()
 
     # flask_injector
-    configure_injector(app, db)
+    _configure_injector(app, db)

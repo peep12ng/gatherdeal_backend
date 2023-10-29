@@ -4,6 +4,7 @@ from flask_apscheduler import APScheduler
 from flask_restx import Api
 
 from .sqlalchemy import Base
+from .injector import _configure_injector
 
 db = SQLAlchemy(model_class=Base)
 migrate = Migrate()

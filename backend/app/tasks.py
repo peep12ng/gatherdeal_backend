@@ -1,4 +1,4 @@
-from .service import HotdealService
+from .services import HotdealService
 from .extensions import db
 
 def hotdeal_update_task():

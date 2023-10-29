@@ -10,7 +10,7 @@ class AppModule(Module):
         from flask_sqlalchemy.session import Session
         binder.bind(Session, to=self.db.session, scope=singleton)
 
-def configure_injector(app, db):
+def _configure_injector(app, db):
 
     injector = Injector([AppModule(app, db)])
 

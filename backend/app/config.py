@@ -1,4 +1,7 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class BaseConfig(object):
 
@@ -16,18 +19,18 @@ class DefaultConfig(BaseConfig):
 
     DEBUG = True
 
-    SQLALCHEMY_DATABASE_URI = "mariadb+pymysql://hotdeal:Qlalfqjsgh!23@sdavids.synology.me:3306/hotdeal"
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class LocalConfig(DefaultConfig):
 
-    SQLALCHEMY_DATABASE_URI = "mariadb+pymysql://root:password@localhost:3306/hotdeal"
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_LOCAL_URL")
 
 class TestingConfig(DefaultConfig):
 
     PROJECT = "testing"
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = "mariadb+pymysql://root:password@localhost:3306/hotdeal_test"
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_TESTING_URL")
 
 class StagingConfig(DefaultConfig):
     pass
