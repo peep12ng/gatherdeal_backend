@@ -1,15 +1,17 @@
-from ..extensions import db
 import datetime
 
-class HotdealModel(db.Model):
+from ..extensions import db
+from ..entity import Hotdeal
+
+class HotdealModel(Hotdeal, db.Model):
 
     serialize_rules = ["scrape_at"]
     _now = datetime.datetime.now()
 
     id = db.Column(db.VARCHAR(30), primary_key=True)
     title = db.Column(db.TEXT)
-    first_price = db.Column(db.DOUBLE)
-    last_price = db.Column(db.DOUBLE)
+    original_price = db.Column(db.DOUBLE)
+    price_to_krw = db.Column(db.DOUBLE)
     currency_type = db.Column(db.VARCHAR(30))
     store_link = db.Column(db.TEXT)
     source_link = db.Column(db.TEXT)

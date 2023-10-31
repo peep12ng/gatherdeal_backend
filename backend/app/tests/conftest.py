@@ -44,3 +44,9 @@ def session(app, db, request):
     transaction.rollback()
     connection.close()
     session.remove()
+
+@pytest.fixture(scope='session')
+def client(app):
+    client = app.test_client()
+
+    return client

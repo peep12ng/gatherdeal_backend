@@ -13,7 +13,7 @@ class ClientObject:
         async with ClientSession() as session:
             result = await asyncio.gather(self._get(session, url))
         
-            return result
+            return result[0]
     
     async def get_many(self, urls: list[str]):
         async with ClientSession() as session:
