@@ -5,8 +5,11 @@ from .extensions import db, migrate, scheduler, api, _configure_injector
 
 from .tasks import hotdeal_update_task
 
-NAMESPACES = [
+from .apis import hotdeal_api, hotdeals_api
 
+NAMESPACES = [
+    hotdeal_api,
+    hotdeals_api,
 ]
 
 def create_app(app_name=None, config=None) -> Flask:

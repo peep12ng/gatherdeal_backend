@@ -1,18 +1,23 @@
 import pytest
 
 from app import create_app
-from app import db as _db
+from app import db
 from ..config import TestingConfig
 
 import os
 import shutil
 from flask_migrate import init, migrate, upgrade
 
+from sqlalchemy import text
+
 @pytest.fixture(scope='session')
 def app():
-    app = create_app(config=TestingConfig)
-
     os.chdir(os.path.split(os.path.abspath(__file__))[0])
+
+    if os.path.exists("migrations"):
+        shutil.rmtree("migrations")
+    
+    app = create_app(config=TestingConfig)
 
     with app.app_context():
         init()
@@ -21,29 +26,34 @@ def app():
 
         yield app
 
+        db.session.remove()
+        db.drop_all()
+        db.session.execute(text("DROP TABLE alembic_version"))
+
     shutil.rmtree("migrations")
 
-@pytest.fixture(scope='session')
-def db(app):
-    with app.app_context():
-        _db.create_all()
-        yield _db
+# @pytest.fixture(scope='session')
+# def db(app):
+#     with app.app_context():
+#         _db.create_all()
+#         yield _db
+#         _db.drop_all()
 
-@pytest.fixture(scope='function')
-def session(app, db, request):
-    connection = _db.engine.connect()
-    transaction = connection.begin()
+# @pytest.fixture(scope='function')
+# def session(app, db, request):
+#     connection = _db.engine.connect()
+#     transaction = connection.begin()
 
-    options = dict(bind=connection, binds={})
-    session = _db._make_scoped_session(options)
+#     options = dict(bind=connection, binds={})
+#     session = _db._make_scoped_session(options)
 
-    _db.session = session
+#     _db.session = session
 
-    yield session
+#     yield session
 
-    transaction.rollback()
-    connection.close()
-    session.remove()
+#     transaction.rollback()
+#     connection.close()
+#     session.remove()
 
 @pytest.fixture(scope='session')
 def client(app):
