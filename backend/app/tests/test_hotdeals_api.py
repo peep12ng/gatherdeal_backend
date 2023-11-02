@@ -1,5 +1,3 @@
-import json
-
 def test_hotdeal_api(client):
     resp = client.post("/api/hotdeals/update")
 

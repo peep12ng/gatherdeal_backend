@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from flask_sqlalchemy.session import Session
 from flask_sqlalchemy.model import Model
 from flask_sqlalchemy.query import Query
+from flask_sqlalchemy.pagination import Pagination
 
 T = TypeVar("T", bound=Model)
 
@@ -31,6 +32,14 @@ class GenericRepository(Generic[T], ABC):
     
     @abstractmethod
     def delete(self, id: str) -> None:
+        raise NotImplementedError()
+    
+    @abstractmethod
+    def exists(self, id: str) -> bool:
+        raise NotImplementedError()
+
+    @abstractmethod
+    def paginate(self, page: int, per_page: int) -> Pagination:
         raise NotImplementedError()
     
     @abstractmethod
@@ -114,6 +123,10 @@ class GenericSQLRepository(GenericRepository[T], ABC):
     
     def exists(self, id: str) -> bool:
         return bool(self.get_by_id(id))
+
+    def paginate(self, page: int, per_page: int) -> Pagination:
+        query = self._model_cls.query
+        return query.paginate(page=page, per_page=per_page, error_out=False)
     
     def commit(self) -> None:
         self._session.commit()

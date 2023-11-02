@@ -1,2 +1,1 @@
-from .hotdeal import ns as hotdeal_api
-from .hotdeals import ns as hotdeals_api
+from .hotdeals.endpoints import hotdeal_ns

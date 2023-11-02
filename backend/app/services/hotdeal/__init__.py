@@ -1,3 +1,5 @@
+from flask_restx import marshal
+
 from injector import inject
 
 from ...repositories import HotdealRepository
@@ -27,6 +29,10 @@ class HotdealService:
             self._hotdeal_repo.close()
         
         return hotdeals
+    
+    def get_hotdeal_list(self, page, per_page):
+        pagination = self._hotdeal_repo.paginate(page, per_page)
+        return pagination
     
     def get_hotdeals(self, page=1):
         per_page = 10
