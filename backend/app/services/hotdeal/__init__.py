@@ -34,16 +34,6 @@ class HotdealService:
         pagination = self._hotdeal_repo.paginate(page, per_page)
         return pagination
     
-    def get_hotdeals(self, page=1):
-        per_page = 10
-        offset = 10*(page-1)
-
-        _hotdeals = self._hotdeal_repo.list(per_page, offset, is_blind=False, is_done=False)
-
-        hotdeals = {h.id:h.serialize() for h in _hotdeals}
-
-        return hotdeals
-    
     def get_hotdeal(self, id: str):
 
         _hotdeal = self._hotdeal_repo.get_by_id(id)

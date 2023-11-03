@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 
 from . import config as Config
 from .extensions import db, migrate, scheduler, api, _configure_injector
@@ -24,6 +25,7 @@ def create_app(app_name=None, config=None) -> Flask:
 
 def configure_app(app: Flask, config=None):
 
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
     app.config.from_object(Config.DefaultConfig)
 
     if config:

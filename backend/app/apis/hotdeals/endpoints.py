@@ -52,6 +52,20 @@ class HotdealList(Resource):
         response.headers["Total_Count"] = pagination.total
         return response
 
+@hotdeal_ns.route("/<string:id>", endpoint="hotdeal")
+@hotdeal_ns.param("id", "Hotdeal id")
+class Hotdeal(Resource):
+
+    @inject
+    def __init__(self, api, svc: HotdealService, *args, **kwargs):
+        self.svc = svc
+        super().__init__(api, *args, **kwargs)
+    
+    @hotdeal_ns.response(int(HTTPStatus.OK), "Ok", hotdeal_model)
+    @hotdeal_ns.marshal_with(hotdeal_model)
+    def get(self, id):
+        return self.svc.get_hotdeal(id)
+
 @hotdeal_ns.route("/update")
 class HotdealUpdate(Resource):
 
