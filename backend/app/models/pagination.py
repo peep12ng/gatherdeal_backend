@@ -1,21 +1,7 @@
 from flask_restx import Model
-from flask_restx.fields import String, Float, DateTime, Boolean, Nested, Integer, List
+from flask_restx.fields import String, Nested, Boolean, Integer, List
 
-hotdeal_model = Model(
-    "Hotdeal",
-    {
-        "id": String,
-        "title": String,
-        "original_price": Float,
-        "price_to_krw": Float,
-        "currency_type": String,
-        "store_link": String,
-        "source_link": String,
-        "scrape_at": DateTime,
-        "is_done": Boolean,
-        "is_blind": Boolean,
-    },
-)
+from .hotdeal import hotdeal_model
 
 pagination_links_model = Model(
     "Nav Links",

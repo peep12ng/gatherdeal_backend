@@ -1,26 +1,13 @@
-from flask_restx import Namespace, Resource, marshal
-
+from flask_restx import Namespace, Resource
 from http import HTTPStatus
-
-from .models import (
-    hotdeal_model,
-    pagination_model,
-    pagination_links_model,
-)
+from injector import inject
 
 from .parsers import (
     pagination_parser,
 )
 
-from .utils import (
-    _pagination_nav_links,
-    _pagination_nav_header_links,
-)
-
-from flask import jsonify
-
-from injector import inject
-
+from ...models.hotdeal import hotdeal_model
+from ...models.pagination import pagination_links_model, pagination_model
 from ...services import HotdealService
 
 hotdeal_ns = Namespace(name="hotdeals", description="핫딜 다중/단일 조회, 갱신을 위한 API", path="/hotdeals", validate=True)
@@ -44,13 +31,7 @@ class HotdealList(Resource):
         request_data = pagination_parser.parse_args()
         page = request_data.get("page")
         per_page = request_data.get("per_page")
-        pagination = self.svc.get_hotdeal_list(page, per_page)
-        response_data = marshal(pagination, pagination_model)
-        response_data["links"] = _pagination_nav_links(pagination)
-        response = jsonify(response_data)
-        response.headers["Link"] = _pagination_nav_header_links(pagination)
-        response.headers["Total_Count"] = pagination.total
-        return response
+        return self.svc.get_hotdeal_list_response(page, per_page)
 
 @hotdeal_ns.route("/<string:id>", endpoint="hotdeal")
 @hotdeal_ns.param("id", "Hotdeal id")

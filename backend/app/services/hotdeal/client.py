@@ -25,8 +25,8 @@ class ClientObject:
         async with session.get(url) as res:
 
             if res.status==429:
-                await asyncio.sleep(10)
                 print(429, url)
+                await asyncio.sleep(10)
                 return await self._get(session, url)
             elif res.status>=400:
                 raise RequestError(res.reason, url, res.status, res.headers)

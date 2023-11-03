@@ -1,11 +1,12 @@
+from flask_restx import Model
+from flask_restx.fields import String, Float, DateTime, Boolean
 import datetime
 
 from ..extensions import db
 from ..entity import Hotdeal
 
 class HotdealModel(Hotdeal, db.Model):
-
-    serialize_rules = ["scrape_at"]
+    
     _now = datetime.datetime.now()
 
     id = db.Column(db.VARCHAR(30), primary_key=True)
@@ -18,3 +19,19 @@ class HotdealModel(Hotdeal, db.Model):
     scrape_at = db.Column(db.DATETIME, default=_now)
     is_done = db.Column(db.BOOLEAN)
     is_blind = db.Column(db.BOOLEAN)
+
+hotdeal_model = Model(
+    "Hotdeal",
+    {
+        "id": String,
+        "title": String,
+        "original_price": Float,
+        "price_to_krw": Float,
+        "currency_type": String,
+        "store_link": String,
+        "source_link": String,
+        "scrape_at": DateTime,
+        "is_done": Boolean,
+        "is_blind": Boolean,
+    },
+)

@@ -3,7 +3,7 @@ def test_hotdeal_api(client):
 
     assert resp.status_code==200
 
-    resp = client.get("/api/hotdeals/1")
+    resp = client.get("/api/hotdeals/?page=1&per_page=10")
 
     assert resp.status_code==200
 
