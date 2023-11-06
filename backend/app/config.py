@@ -24,25 +24,25 @@ class DefaultConfig(BaseConfig):
 
 class LocalConfig(DefaultConfig):
 
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_LOCAL_URL")
+    PROJECT = "local"
+    # SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_LOCAL_URL")
 
-class TestingConfig(DefaultConfig):
+class DevelopmentConfig(DefaultConfig):
 
-    PROJECT = "testing"
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_TESTING_URL")
-
-class StagingConfig(DefaultConfig):
-    pass
+    PROJECT = "dev"
+    # SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_DEV_URL")
 
 class ProdConfig(DefaultConfig):
-    pass
+
+    DEBUG = False
+    PROJECT = "prod"
+    # SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_PROD_URL")
 
 def get_config(MODE):
     SWITCH = {
         "LOCAL":LocalConfig,
-        "TESTING":TestingConfig,
-        "STAGING":StagingConfig,
-        "PRODUCTION":ProdConfig,
+        "DEV":DevelopmentConfig,
+        "PROD":ProdConfig,
     }
     return SWITCH[MODE]

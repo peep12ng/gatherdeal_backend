@@ -1,7 +1,9 @@
 from flask import Flask
 from flask_cors import CORS
+import os
 
 from . import config as Config
+from .config import get_config
 from .extensions import db, migrate, scheduler, api, _configure_injector
 
 from .tasks import hotdeal_update_task
@@ -16,7 +18,7 @@ def create_app(app_name=None, config=None) -> Flask:
 
     if app_name is None:
         app_name = Config.DefaultConfig.PROJECT
-    
+
     app = Flask(app_name)
     configure_app(app, config)
     configure_extensions(app)
@@ -30,7 +32,9 @@ def configure_app(app: Flask, config=None):
 
     if config:
         app.config.from_object(config)
-        return
+    else:
+        app.config.from_object(get_config(os.getenv("CONFIG")))
+    print(os.getenv("CONFIG"))
 
 def configure_extensions(app):
 

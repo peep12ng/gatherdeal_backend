@@ -25,8 +25,12 @@ services:
       - 5000
     volumes:
       - ./backend:/www
+    env_file:
+      - backend/local.env
     depends_on:
       - db
+    extra_hosts:
+      - host.docker.internal:host-gateway
   
   nginx:
     container_name: nginx
@@ -36,6 +40,8 @@ services:
     restart: always
     ports:
       - "80:80"
+    depends_on:
+      - backend
 
 volumes:
   db_volume:

@@ -41,7 +41,7 @@ class HotdealService:
         response.headers["Total_Count"] = pagination.total
         return response
     
-    def _pagination_nav_links(pagination: Pagination):
+    def _pagination_nav_links(self, pagination: Pagination):
         nav_links = {}
         per_page = pagination.per_page
         this_page = pagination.page
