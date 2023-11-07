@@ -4,39 +4,32 @@ services:
 
   db:
     container_name: db
-    environment:
-      MYSQL_DATABASE: hotdeal
-      MYSQL_ROOT_PASSWORD: "password"
     build:
       context: db
-      dockerfile: db.dev.dockerfile
+      dockerfile: db.dockerfile
     volumes:
       - db_volume:/var/lib/mysql
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
-
+  
   backend:
     container_name: backend
     build:
       context: backend
-      dockerfile: back.dev.dockerfile
+      dockerfile: back.dockerfile
     expose:
       - 5000
     volumes:
       - ./backend:/www
-    env_file:
-      - backend/local.env
     depends_on:
       - db
-    extra_hosts:
-      - host.docker.internal:host-gateway
-  
+
   nginx:
     container_name: nginx
     build:
       context: nginx
-      dockerfile: nginx.dev.dockerfile
+      dockerfile: nginx.dockerfile
     restart: always
     ports:
       - "80:80"

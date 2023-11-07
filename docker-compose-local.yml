@@ -1,0 +1,11 @@
+services:
+  
+  db:
+    env_file:
+      - ./env/local.env
+    
+  backend:
+    env_file:
+      - ./env/local.env
+    extra_hosts:
+      - host.docker.internal:host-gateway

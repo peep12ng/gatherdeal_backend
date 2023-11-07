@@ -1,0 +1,9 @@
+services:
+  
+  db:
+    env_file:
+      - ./env/dev.env
+    
+  backend:
+    env_file:
+      - ./env/dev.env
