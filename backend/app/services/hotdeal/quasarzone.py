@@ -47,31 +47,35 @@ class QuasarzoneHotdealUpdateService(HotdealUpdateServiceBase):
         bs = BeautifulSoup(r, "html.parser")
 
         d = {}
+
         d["code"] = url.split("views/")[-1]
         d["id"] = self._create_hotdeal_id(d["code"])
         d["source_link"] = url
 
-        r = asyncio.run(self._client.get(url))
-        bs = BeautifulSoup(r, "html.parser")
-
-        d["title"] = bs.find("title").text.split(" >")[0]
-
-        info_table = bs.select_one("table.market-info-view-table")
-        info_trs = info_table.find_all("tr")
-
-        d["original_price"] = float(re.sub(r'[^0-9.]', '', info_trs[2].find("span").text))
-        d["price_to_krw"] = 0
-        d["currency_type"] = info_trs[2].find("span").text.split("(")[1][:3]
-        d["store_link"] = info_trs[0].find("a").text
-
-        if "종료" in bs.select_one("h1.title").text:
-            d["is_done"] = True
-        else:
-            d["is_done"] = False
-        
         if "블라인드 처리된 글입니다" in str(bs):
             d["is_blind"] = True
+            d["title"] = None
+            d["original_price"] = None
+            d["price_to_krw"] = None
+            d["currency_type"] = None
+            d["store_link"] = None
+            d["is_done"] = None
         else:
             d["is_blind"] = False
+
+            d["title"] = bs.find("title").text.split(" >")[0]
+
+            info_table = bs.select_one("table.market-info-view-table")
+            info_trs = info_table.find_all("tr")
+
+            d["original_price"] = float(re.sub(r'[^0-9.]', '', info_trs[2].find("span").text))
+            d["price_to_krw"] = 0
+            d["currency_type"] = info_trs[2].find("span").text.split("(")[1][:3]
+            d["store_link"] = info_trs[0].find("a").text
+
+            if "종료" in bs.select_one("h1.title").text:
+                d["is_done"] = True
+            else:
+                d["is_done"] = False
 
         return class_from_args(Hotdeal, d)

@@ -1,1 +1,1 @@
-from .hotdeals.endpoints import hotdeal_ns
+from .hotdeals import hotdeal_ns

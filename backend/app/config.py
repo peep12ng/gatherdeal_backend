@@ -27,6 +27,11 @@ class LocalConfig(DefaultConfig):
     PROJECT = "local"
     # SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_LOCAL_URL")
 
+class TestingConfig(DefaultConfig):
+
+    TESTING = True
+    PROJECT = "test"
+
 class DevelopmentConfig(DefaultConfig):
 
     TESTING = True
@@ -42,6 +47,7 @@ class ProdConfig(DefaultConfig):
 def get_config(MODE):
     SWITCH = {
         "LOCAL":LocalConfig,
+        "TESTING":TestingConfig,
         "DEV":DevelopmentConfig,
         "PROD":ProdConfig,
     }

@@ -2,7 +2,7 @@ import pytest
 
 from app import create_app
 from app import db
-from ..config import LocalConfig
+from ..config import TestingConfig
 
 import os
 import shutil
@@ -17,7 +17,7 @@ def app():
     if os.path.exists("migrations"):
         shutil.rmtree("migrations")
     
-    app = create_app(config=LocalConfig)
+    app = create_app(config=TestingConfig)
 
     with app.app_context():
         init()
@@ -31,6 +31,11 @@ def app():
         db.session.execute(text("DROP TABLE alembic_version"))
 
     shutil.rmtree("migrations")
+
+@pytest.fixture(scope='session')
+def session(app):
+    with app.app_context():
+        yield db.session
 
 @pytest.fixture(scope='session')
 def client(app):

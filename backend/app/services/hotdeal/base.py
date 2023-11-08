@@ -12,11 +12,31 @@ class HotdealUpdateServiceBase:
     # 수집 모듈
     _client = ClientObject()
 
+    # 핫딜 게시판 구분 코드
+    _categories: str = None
+
+    # 핫딜 게시판 주소 리스트
+    _board_urls: list[str] = None
+
     @abstractproperty
     def _source(self) -> Source:
         '''
         타겟 웹사이트 Source\n
         웹사이트 별 ID 생성을 위해 사용.
+        '''
+        raise NotImplementedError()
+
+    @abstractproperty
+    def _categories(self) -> List[str]:
+        '''
+        핫딜 게시판 구분 코드 리스트
+        '''
+        raise NotImplementedError()
+    
+    @abstractproperty
+    def _board_urls(self) -> List[str]:
+        '''
+        핫딜 게시판 코드 구분 주소 리스트
         '''
         raise NotImplementedError()
 
@@ -29,6 +49,10 @@ class HotdealUpdateServiceBase:
         
         :param repo (HotdealRepository): 상위 HotdealService의 HotdealRepository
         '''
+        raise NotImplementedError()
+
+    @abstractmethod
+    def _get_board_urls(self):
         raise NotImplementedError()
     
     @abstractmethod
